@@ -846,15 +846,21 @@ function exportCsv() {
   const rows = [...S.transactions].sort((a, b) => (a.date < b.date ? -1 : 1)).map(t => {
     const c = catById(t.categoryId);
     return [
-      t.date, t.type === 'in' ? '收入' : '支出',
+      t.date,
+      t.type === 'in' ? '收入' : '支出',
       c?.parentId ? catName(c.parentId) : (c?.name || '未分类'),
       c?.parentId ? c.name : '',
-      yuan(t.amountCent), accById(t.accountId)?.name || '', t.note || ''
+      yuan(t.amountCent),
+      accById(t.accountId)?.name || '',
+      t.note || ''
     ];
   });
   const csv = '\ufeff' + [head, ...rows].map(r => r.map(q).join(',')).join('\r\n');
-  download('记账明细-' + dayStr() + '.csv', csv, 'text/csv;charset=utf-8');
-  toast('已导出 CSV');
+  if (typeof Android !== 'undefined' && Android.saveCsv) {
+    Android.saveCsv(csv);
+  } else {
+    download('记账明细-' + dayStr() + '.csv', csv, 'text/csv;charset=utf-8');
+  }
 }
 
 async function importFile(ev) {
