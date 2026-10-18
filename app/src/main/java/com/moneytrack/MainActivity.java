@@ -58,27 +58,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(wv);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_FILE) {
-            if (uploadCallback == null) return;
-            Uri[] results = null;
-            if (resultCode == RESULT_OK && data != null) {
-                if (data.getClipData() != null) {
-                    int count = data.getClipData().getItemCount();
-                    results = new Uri[count];
-                    for (int i = 0; i < count; i++) {
-                        results[i] = data.getClipData().getItemAt(i).getUri();
-                    }
-                } else if (data.getData() != null) {
-                    results[i] = data.getData();
-                }
-            }
-            uploadCallback.onReceiveValue(results);
-            uploadCallback = null;
-        }
-    }
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_FILE) {
+			if (uploadCallback == null) return;
+			Uri[] results = null;
+			if (resultCode == RESULT_OK && data != null) {
+				if (data.getClipData() != null) {
+					int count = data.getClipData().getItemCount();
+					results = new Uri[count];
+					for (int i = 0; i < count; i++) {
+						results[i] = data.getClipData().getItemAt(i).getUri();
+					}
+				} else if (data.getData() != null) {
+					results = new Uri[]{data.getData()};
+				}
+			}
+			uploadCallback.onReceiveValue(results);
+			uploadCallback = null;
+		}
+	}
 
     public class WebAppInterface {
         MainActivity mContext;
