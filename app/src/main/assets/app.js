@@ -832,8 +832,12 @@ function exportJson() {
     accounts: S.accounts, categories: S.categories, transactions: S.transactions,
     transfers: S.transfers, adjustments: S.adjustments
   };
-  download('记账备份-' + dayStr() + '.json', JSON.stringify(data, null, 2), 'application/json');
-  toast('已导出 JSON');
+  const text = JSON.stringify(data, null, 2);
+  if (typeof Android !== 'undefined' && Android.saveJson) {
+    Android.saveJson(text);
+  } else {
+    download('记账备份-' + dayStr() + '.json', text, 'application/json');
+  }
 }
 
 function exportCsv() {
